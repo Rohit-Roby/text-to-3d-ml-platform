@@ -1,0 +1,11 @@
+name: text3d_analytics
+version: '1.0.0'
+config-version: 2
+profile: text3d_analytics
+model-paths: ["models"]
+models:
+  text3d_analytics:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

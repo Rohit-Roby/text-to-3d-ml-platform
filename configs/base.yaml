@@ -1,0 +1,35 @@
+project:
+  seed: 42
+  category: chair
+  development_sample_size: 50
+
+data:
+  target_shape: [32, 32, 32]
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+
+text_encoder:
+  production_backend: t5
+  smoke_backend: hash
+  model_name: google-t5/t5-base
+  max_length: 64
+
+training:
+  batch_size: 16
+  epochs: 20
+  learning_rate: 0.0002
+  beta1: 0.5
+  beta2: 0.999
+  noise_dim: 128
+  num_workers: 0
+
+cloud:
+  enabled: false
+  gcs_bucket: ""
+  bigquery_dataset: text3d_analytics
+
+mlflow:
+  enabled: true
+  experiment_name: text-to-3d-cgan
+  tracking_uri: ./mlruns

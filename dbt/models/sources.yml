@@ -1,0 +1,12 @@
+version: 2
+sources:
+  - name: raw
+    schema: text3d_analytics
+    tables:
+      - name: training_manifest
+
+models:
+  - name: stg_assets
+    columns:
+      - name: asset_id
+        tests: [not_null, unique]
