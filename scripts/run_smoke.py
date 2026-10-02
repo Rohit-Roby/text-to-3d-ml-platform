@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import shutil
+from pathlib import Path
 
 from pipelines.build_dataset import build_synthetic_dataset
 from src.inference.runtime import GenerationRuntime

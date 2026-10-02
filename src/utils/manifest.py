@@ -5,7 +5,9 @@ from pathlib import Path
 import pandas as pd
 
 
-def write_manifest(df: pd.DataFrame, output_dir: str | Path, stem: str = "training_manifest") -> Path:
+def write_manifest(
+    df: pd.DataFrame, output_dir: str | Path, stem: str = "training_manifest"
+) -> Path:
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     parquet_path = output_dir / f"{stem}.parquet"

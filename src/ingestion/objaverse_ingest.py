@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-from pathlib import Path
-from unicodedata import category
-import pandas as pd
-import objaverse
-
 import re
+from pathlib import Path
 
-
+import objaverse
+import pandas as pd
 
 IGNORED_TAGS = {
     "3d",
@@ -48,6 +45,7 @@ def clean_text(value):
     value = re.sub(r"\s+", " ", value)
 
     return value.strip()
+
 
 def sanitize_description(text, category, max_words=35):
     text = clean_text(text)
@@ -107,6 +105,7 @@ def sanitize_description(text, category, max_words=35):
 
     return text
 
+
 def is_useful_text(value):
     text = clean_text(value)
 
@@ -131,11 +130,7 @@ def is_useful_text(value):
     # ------------------------------------------------
     compact = re.sub(r"[^0-9a-f]", "", lower)
 
-    if (
-        len(compact) >= 12
-        and re.fullmatch(r"[0-9a-f]+", compact)
-        and not re.search(r"\s", lower)
-    ):
+    if len(compact) >= 12 and re.fullmatch(r"[0-9a-f]+", compact) and not re.search(r"\s", lower):
         return False
 
     # ------------------------------------------------
@@ -163,15 +158,10 @@ def is_useful_text(value):
     # ------------------------------------------------
     # Mostly numeric / meaningless strings
     # ------------------------------------------------
-    alphabetic_chars = sum(
-        char.isalpha()
-        for char in text
-    )
+    alphabetic_chars = sum(char.isalpha() for char in text)
 
-    if alphabetic_chars < 3:
-        return False
+    return alphabetic_chars >= 3
 
-    return True
 
 def build_description(annotation, category):
     parts = []
@@ -187,9 +177,7 @@ def build_description(annotation, category):
     # ------------------------------------------------
     # 2. Description
     # ------------------------------------------------
-    raw_description = clean_text(
-        annotation.get("description")
-    )
+    raw_description = clean_text(annotation.get("description"))
 
     if is_useful_text(raw_description):
         parts.append(raw_description)
@@ -202,52 +190,35 @@ def build_description(annotation, category):
     tag_names = []
 
     for tag in tags:
-
         if not isinstance(tag, dict):
             continue
 
-        tag_name = clean_text(
-            tag.get("name")
-        )
+        tag_name = clean_text(tag.get("name"))
 
-        if (
-            is_useful_text(tag_name)
-            and tag_name.lower() not in IGNORED_TAGS
-        ):
+        if is_useful_text(tag_name) and tag_name.lower() not in IGNORED_TAGS:
             tag_names.append(tag_name)
 
-    tag_names = list(
-        dict.fromkeys(tag_names)
-    )
+    tag_names = list(dict.fromkeys(tag_names))
 
     parts.extend(tag_names)
 
     # ------------------------------------------------
     # 4. Categories
     # ------------------------------------------------
-    categories = annotation.get(
-        "categories"
-    ) or []
+    categories = annotation.get("categories") or []
 
     category_names = []
 
     for item in categories:
-
         if not isinstance(item, dict):
             continue
 
-        category_name = clean_text(
-            item.get("name")
-        )
+        category_name = clean_text(item.get("name"))
 
         if is_useful_text(category_name):
-            category_names.append(
-                category_name
-            )
+            category_names.append(category_name)
 
-    category_names = list(
-        dict.fromkeys(category_names)
-    )
+    category_names = list(dict.fromkeys(category_names))
 
     parts.extend(category_names)
 
@@ -256,9 +227,7 @@ def build_description(annotation, category):
     # ------------------------------------------------
     parts = list(dict.fromkeys(parts))
 
-    text = clean_text(
-        " ".join(parts)
-    )
+    text = clean_text(" ".join(parts))
 
     # ------------------------------------------------
     # 6. Guaranteed semantic fallback
@@ -284,7 +253,6 @@ def collect_category_metadata(category: str, limit: int | None = None) -> pd.Dat
 
     for uid in uids:
         annotation = annotations.get(uid) or {}
-        tags = annotation.get("tags") or []
 
         description = build_description(annotation, category)
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from pathlib import Path
-from google.cloud import storage, bigquery
+from google.cloud import bigquery, storage
 
 
 def upload_file_to_gcs(local_path: str, bucket_name: str, blob_name: str) -> str:
@@ -13,5 +12,7 @@ def upload_file_to_gcs(local_path: str, bucket_name: str, blob_name: str) -> str
 
 def load_parquet_to_bigquery(parquet_uri: str, table_id: str) -> None:
     client = bigquery.Client()
-    job_config = bigquery.LoadJobConfig(source_format=bigquery.SourceFormat.PARQUET, write_disposition="WRITE_TRUNCATE")
+    job_config = bigquery.LoadJobConfig(
+        source_format=bigquery.SourceFormat.PARQUET, write_disposition="WRITE_TRUNCATE"
+    )
     client.load_table_from_uri(parquet_uri, table_id, job_config=job_config).result()

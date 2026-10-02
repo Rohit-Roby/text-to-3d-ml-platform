@@ -18,6 +18,7 @@ def _mlflow_module(enabled: bool):
         return None
     try:
         import mlflow
+
         return mlflow
     except ImportError:
         return None

@@ -105,7 +105,7 @@ def build_objaverse_dataset(
                     "source": "objaverse",
                 }
             )
-        except Exception as exc:  # one bad asset must not kill the entire build
+        except Exception as exc:  # noqa: BLE001 - one bad asset must not kill the entire build
             failures.append({"uid": row.uid, "reason": f"{type(exc).__name__}: {exc}"})
 
     manifest = pd.DataFrame(rows)

@@ -1,5 +1,6 @@
 import torch
-from src.models.cgan import ConditionalGenerator, ConditionalDiscriminator
+
+from src.models.cgan import ConditionalDiscriminator, ConditionalGenerator
 
 
 def test_generator_output_shape():
